@@ -15,19 +15,16 @@ fn revrot(s: &str, sz: usize) -> String {
             self.digits.iter().fold(String::new(), |acc, cur| acc + with + &cur.to_string())
         }
 
-        pub fn new(bytes: &[u8] ) -> Self {
-            let str_chunk = std::str::from_utf8(bytes).unwrap();
-            let strs_chunk = str_chunk.split_terminator("").filter(|y| y!=&"");
-            let mut digits: Vec<u32> = strs_chunk.map(|y| {
-                u32::from_str_radix(y, 10).unwrap_or(911)
+        pub fn new(chars: Vec<char>) -> Self {
+            let mut digits: Vec<u32> = chars.iter().map(|y| {
+                y.to_digit(10).unwrap()
             }).collect();
             let sum_of_cubes: u32 = digits.iter().map(|x| x.pow(3)).sum();
-            let divides_by_two: bool = (sum_of_cubes as f64 / 2.0).round() == (sum_of_cubes as f64 / 2.0);
+            let divides_by_two: bool = sum_of_cubes % 2 == 0;
             if divides_by_two {
                 digits.reverse();
             } else {
-                let first = digits.remove(0);
-                digits.push(first);
+                digits.rotate_left(1);
             }
             Self {
                 digits
@@ -41,14 +38,14 @@ fn revrot(s: &str, sz: usize) -> String {
     }
     let mut output = String::new();
     if usize::gt(&sz, &usize::min_value()) && s.chars().count() > 0  {
-        let chunk_vector: Vec<DigitChunk> = s.as_bytes()
-        .chunks(sz)
-        .map(|w| DigitChunk::new(w))
-        .filter(|dc| dc.digits.len() >= sz)
+        let chunk_vector: Vec<DigitChunk> = s.chars()
+        .collect::<Vec<char>>()
+        .chunks_exact_mut(sz)
+        .map(|w| DigitChunk::new(w.to_vec()))
         .collect();
-        for chunk in &chunk_vector {
-            println!("{}", chunk);
-        }
+        // for chunk in &chunk_vector {
+        //     println!("{}", chunk);
+        // }
         output = chunk_vector.iter().fold(String::new(), |acc, chunk| acc + chunk.join_digits("").as_str());
     }
 

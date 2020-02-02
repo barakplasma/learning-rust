@@ -1,0 +1,10 @@
+[package]
+name = "accumulated_skiing_altitude"
+version = "0.1.0"
+authors = ["Michael Salaverry <michael_salaverry@intuit.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+quickcheck = "0.9.2"

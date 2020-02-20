@@ -3,25 +3,21 @@ fn main() {
     good_vs_evil("0 0 0 0 0 10", "0 0 0 0 0 0 0");
 }
 
-fn get_worth(side: &str, worth: [i32; 7]) -> i32 {
-    let mut sum = 0;
-    let mut index = 0;
-    let counts = side.split(" ").map(|c| c.parse::<i32>().unwrap());
-    for count in counts {
-        sum += worth[index] * count;
-        index += 1;
-    }
-    sum
+fn get_worth(side: &str, worth: [u8; 7]) -> u8 {
+    let counts = side.split(" ").map(|c| c.parse::<u8>().unwrap());
+    counts.zip(worth.into_iter()).map(|tup| tup.0 * tup.1).sum()
 }
 
 fn good_vs_evil(good: &str, evil: &str) -> String {
-    let battle_result = get_worth(good, [1,2,3,3,4,10,0]) - get_worth(evil, [1,2,2,2,3,5,10]);
+    let good_worth_sum = get_worth(good, [1,2,3,3,4,10,0]);
+    let evil_worth_sum = get_worth(evil, [1,2,2,2,3,5,10]);
     
-    match battle_result {
-        std::i32::MIN..=-1 => String::from("Battle Result: Evil eradicates all trace of Good"),
-        0 => String::from("Battle Result: No victor on this battle field"),
-        1..=std::i32::MAX => String::from("Battle Result: Good triumphs over Evil"),
-    }
+    use std::cmp::Ordering;
+    String::from(match good_worth_sum.cmp(&evil_worth_sum) {
+        Ordering::Less => "Battle Result: Evil eradicates all trace of Good",
+        Ordering::Equal => "Battle Result: No victor on this battle field",
+        Ordering::Greater => "Battle Result: Good triumphs over Evil",
+    })
 }
 
 #[test]

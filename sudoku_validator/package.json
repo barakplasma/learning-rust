@@ -1,0 +1,16 @@
+{
+  "name": "sudoku_validator",
+  "version": "1.0.0",
+  "description": "test difference between rust and typescript",
+  "main": "index.js",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "zwitterion": "^0.45.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "zwitterion"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -2,7 +2,7 @@
 
 type Board = Array<Row>;
 type Row = Array<number>
-class Sudoku {
+export class Sudoku {
   board: Board
   max_length: number
   constructor(board: Board) {
@@ -135,14 +135,14 @@ var badSudoku3 = new Sudoku([
   [2, 3, 1, 4]
 ]);
 
-import { assert } from 'chai'
+// import { assert } from 'chai'
 
-// describe('Sudoku', function() {
-// it ('should be valid', function() {
-assert.equal(goodSudoku1.isValid(), true);
-assert.equal(goodSudoku2.isValid(), true);
+// // describe('Sudoku', function() {
+// // it ('should be valid', function() {
+// assert.equal(goodSudoku1.isValid(), true);
+// assert.equal(goodSudoku2.isValid(), true);
 
-// it ('should be invalid', function() {
-assert.equal(badSudoku1.isValid(), false);
-assert.equal(badSudoku2.isValid(), false);
-assert.equal(badSudoku3.isValid(), false);
+// // it ('should be invalid', function() {
+// assert.equal(badSudoku1.isValid(), false);
+// assert.equal(badSudoku2.isValid(), false);
+// assert.equal(badSudoku3.isValid(), false);

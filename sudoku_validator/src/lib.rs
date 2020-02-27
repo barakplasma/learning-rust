@@ -1,4 +1,4 @@
-
+#![no_main]
 use std::collections::HashSet;
 pub struct Sudoku {
     pub data: Vec<Vec<u32>>,
@@ -16,6 +16,12 @@ impl Sudoku {
             return false;
         }
         return true;
+    }
+
+    pub fn new(data: Vec<Vec<u32>>) -> Sudoku {
+        Sudoku { 
+            data
+        }
     }
 
     fn check_all_rows(&self, data: &Vec<Vec<u32>>) -> bool {
@@ -104,6 +110,12 @@ impl Sudoku {
             false
         }
     }
+}
+
+#[no_mangle]
+pub fn is_valid(data: Vec<Vec<u32>>) -> bool {
+    let data = Sudoku::new(data);
+    data.is_valid()
 }
 
 #[test]

@@ -69,7 +69,7 @@ class sudoku_solver {
   }
 }
 
-export function sudoku(puzzle: Board): Board {
+function sudoku(puzzle: Board): Board {
   //return the solved puzzle as a 2d array of 9 x 9 
   const solution = new sudoku_solver(puzzle);
   solution.solve();
@@ -217,3 +217,39 @@ const solution2 = [
 
 expect(sudoku(puzzle1)).toEqual(solution);
 expect(sudoku(puzzle2)).toEqual(solution2);
+
+// See https://www.chaijs.com for how to use Chai.
+import { assert } from "chai";
+
+import { sudoku } from "./solution";
+
+type Board = Array<Array<number>>;
+
+var sudoku_puzzles = [
+            ["605720039400005100020100004090030706100809005204050080800003020002900001350067408",
+             "615724839487395162923186574598432716136879245274651983849513627762948351351267498"],
+            ["008030540300407900410008002043502060500000008060309410100800027005603004029070800",
+             "978231546352467981416958372843512769591746238267389415134895627785623194629174853"],
+            ["600108203020040090803005400504607009030000050700803102001700906080030020302904005",
+                "645198273127346598893275461514627389238419657769853142451782936986531724372964815"],
+            ["019060540000000000820974036001503800000000000002701600750138092000000000083040710",
+                "319862547467315289825974136671593824538426971942781653756138492194257368283649715"],
+            ["046000000902060008008400250000800070500702003010006000064003900300080102000000730",
+                "146258397952367418738491256623849571589712643417536829264173985375984162891625734"],
+            ["006020050002000194000100207607082019085070030000605400090013040001009000730008900",
+                "416927853372856194859134267647382519985471632123695478598213746261749385734568921"]
+];
+let transpose = (a: Board) => a[0].map((_, c) => a.map(r => r[c]));
+
+
+const strToBoard = (str: String): Board => {
+  const empty_board: Board = [[], [], [], [], [], [], [], [], []];
+  return transpose(str.split('').map(Number).reduce((acc, cur, i) => {
+    acc[i%9].push(cur); return acc;
+  }, empty_board))
+}
+
+for (let puzzle of sudoku_puzzles) {
+    const parts = puzzle.map(strToBoard);
+    expect(sudoku(parts[0])).toEqual(parts[1]);
+}

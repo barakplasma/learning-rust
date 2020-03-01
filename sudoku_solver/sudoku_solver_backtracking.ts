@@ -1,9 +1,10 @@
 const expect = require('expect');
 type Board = Array<Array<number>>;
+
 class sudoku_solver {
   board: Board;
   empty_location = [0, 0];
-  constructor(board) {
+  constructor(board: Board) {
     this.board = board;
   }
   solve(): boolean {
@@ -62,21 +63,21 @@ class sudoku_solver {
     return false;
   }
 
-  check_location_is_safe(row, col, num): Boolean {
+  check_location_is_safe(row: number, col: number, num: number): Boolean {
     return !this.used_in_row(row, num) && !this.used_in_col(col, num) && !this.used_in_box(row - row % 3,
       col - col % 3, num) && this.board[row][col] === 0;
   }
 }
 
-// https://www.codewars.com/kata/5296bc77afba8baa690002d7
-
-function sudoku(puzzle) {
+export function sudoku(puzzle: Board): Board {
   //return the solved puzzle as a 2d array of 9 x 9 
   const solution = new sudoku_solver(puzzle);
   solution.solve();
   return solution.board;
 }
 
+
+// https://www.codewars.com/kata/5296bc77afba8baa690002d7
 const puzzle1 = [
   [5, 3, 0, 0, 7, 0, 0, 0, 0],
   [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -214,5 +215,5 @@ const solution2 = [
   ]
 ]
 
-expect(sudoku(puzzle1)).toEqual(solution)
-expect(sudoku(puzzle2)).toEqual(solution2)
+expect(sudoku(puzzle1)).toEqual(solution);
+expect(sudoku(puzzle2)).toEqual(solution2);

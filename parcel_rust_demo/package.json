@@ -1,0 +1,21 @@
+{
+  "name": "parcel_rust_demo",
+  "version": "1.0.0",
+  "description": "How to use Rust and WASM in a JS Project",
+  "main": "src/index.html",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel src/index.html --open",
+    "build": "parcel build src/index.html"
+  },
+  "keywords": [
+    "rust",
+    "wasm",
+    "js",
+    "parcel"
+  ],
+  "author": "Michael Salaverry",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}

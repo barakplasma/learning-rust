@@ -2,6 +2,7 @@
 #[macro_use]
 extern crate quickcheck;
 
+// https://www.codewars.com/kata/57f36495c0bb25ecf50000e7/forks/rust
 fn main() {
     println!("Hello, world!");
     let res = find_sum(std::u32::MAX);

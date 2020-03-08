@@ -1,9 +1,9 @@
 #[no_mangle]
-pub fn answer() -> i32 {
+pub fn answer() -> u32 {
   42
 }
 
 #[no_mangle]
-pub fn sum_rs(n: i32) -> i32 {
+pub fn sum_rs(n: u32) -> u32 {
   (0..n+1).sum()
 }

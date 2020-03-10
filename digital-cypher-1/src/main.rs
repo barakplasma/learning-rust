@@ -1,34 +1,22 @@
 fn main() {
     println!("Hello, world!");
+    encode("scout".to_string(), 1939);
 }
-use std::collections::HashMap;
-
 fn encode(msg: String, n: i32) -> Vec<i32> {
     // Digital Cypher assigns to each letter of the alphabet unique number.
-    let alphabet = "abcdefghijklmnopqrstuvwxyz".char_indices();
-    let char_to_index : HashMap<char, i32> = alphabet
-        .into_iter()
-        .fold(
-            HashMap::new(), 
-        |mut acc, p| {
-            acc.insert(p.1, (p.0 + 1) as i32 ); 
-            acc
-        });
+    let alphabet: Vec<(usize, char)> = "abcdefghijklmnopqrstuvwxyz".chars().enumerate().collect();
     // Instead of letters in encrypted word we write the corresponding number
     let msg_indexes: Vec<i32> = msg.chars().fold(Vec::new(), |mut acc, c| {
-        if let Some(i) = char_to_index.get(&c) {
-            acc.push(*i);
+        if let Some(i) = alphabet.iter().find(|l| l.1 == c) {
+            acc.push((i.0+1) as i32);
         }
         acc
     });
     //Then we add to each obtained digit consecutive digits from the key.
-    let key = format!("{}", n).chars().fold(Vec::new(), |mut acc, c: char| {
-        acc.push(c.to_digit(10).unwrap() as i32);
-        acc
-    });
+    let key: Vec<char> = n.to_string().chars().collect();
     let mut cycle_key = key.iter().cycle();
-    msg_indexes.into_iter().map(|i| {
-        i+cycle_key.next().unwrap()
+    msg_indexes.iter().map(|i| {
+        i + cycle_key.next().unwrap().to_digit(10).unwrap() as i32
     }).collect()
 }
 #[cfg(test)]

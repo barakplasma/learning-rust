@@ -1,0 +1,45 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'going-to-the-cinema'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=going-to-the-cinema",
+          "--package=going-to-the-cinema"
+        ],
+        "filter": {
+          "name": "going-to-the-cinema",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'going-to-the-cinema'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=going-to-the-cinema",
+          "--package=going-to-the-cinema"
+        ],
+        "filter": {
+          "name": "going-to-the-cinema",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

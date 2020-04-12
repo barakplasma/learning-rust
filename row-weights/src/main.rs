@@ -4,15 +4,11 @@ fn main() {
 
 // https://www.codewars.com/kata/5abd66a5ccfd1130b30000a9/train/rust
 fn row_weights(array: Vec<u32>) -> (u32, u32) {
-    array.iter().enumerate().fold((0u32, 0u32), |mut acc, item| {
-        let index = item.0;
-        match index % 2 {
-            0 => acc.0 += item.1,
-            1 => acc.1 += item.1,
-            _ => panic!("unexpected modulus result")
-        }
-        acc
-    })
+    let mut team_splitter = [true, false].iter().cycle();
+    let teams: (Vec<u32>, Vec<u32>) = array.iter().partition(|_| {
+        *team_splitter.next().unwrap()
+    });
+    (teams.0.iter().sum(), teams.1.iter().sum())
 }
 
 #[test]

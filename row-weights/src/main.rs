@@ -4,15 +4,15 @@ fn main() {
 
 // https://www.codewars.com/kata/5abd66a5ccfd1130b30000a9/train/rust
 fn row_weights(array: Vec<u32>) -> (u32, u32) {
-    let mut teams = (0u32, 0u32);
-    for i in 0..array.len() {
-        match i % 2 {
-            0 => {teams.0+=array[i]},
-            1 => {teams.1+=array[i]},
-            _ => panic!("unexpected result")
+    array.iter().enumerate().fold((0u32, 0u32), |mut acc, item| {
+        let index = item.0;
+        match index % 2 {
+            0 => acc.0 += item.1,
+            1 => acc.1 += item.1,
+            _ => panic!("unexpected modulus result")
         }
-    }
-    teams
+        acc
+    })
 }
 
 #[test]

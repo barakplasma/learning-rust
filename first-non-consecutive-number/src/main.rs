@@ -12,7 +12,7 @@ fn first_non_consecutive(arr: &Vec<i32>) -> Option<i32> {
             false
         }
     }) {
-        Some(x)=> Some(*x.1),
+        Some((_, n))=> Some(*n),
         None => None
     }
 }

@@ -5,14 +5,10 @@ fn main() {
 
 // https://www.codewars.com/kata/58f8a3a27a5c28d92e000144/solutions/rust
 fn first_non_consecutive(arr: &Vec<i32>) -> Option<i32> {
-    match arr.iter().enumerate().find(|(index, n)| {
-        if *index > 0 {
-            n.cmp(&&(arr[index - 1] + 1)).ne(&std::cmp::Ordering::Equal)
-        } else {
-            false
-        }
+    match arr.windows(2).find(|w| {
+            w[0].ne(&(w[1] - 1))
     }) {
-        Some((_, n))=> Some(*n),
+        Some(x) => Some(x[1]),
         None => None
     }
 }

@@ -63,31 +63,42 @@ PokerHand.prototype.isStraightFlush = function(){
   return this.isSequence() && this.isFlush();
 };
 
+PokerHand.prototype.isStraight = function(){
+  return this.isSequence();
+};
+
+PokerHand.prototype.maxSameValueCount = function(){
+  return this.sameValueCount()[0];
+};
+
 PokerHand.prototype.sameValueCount = function(){
-  let vals = this.value.map(c => c.value)
-  let count = Array(15).fill(0)
-  for (let val of vals) {
-    if (count[val]) {
-      count[val]++;
-    } else {
-      count[val] = 1
-    }
+  let count = CardValues.map((value) => ({value, count: 0}));
+  for (let val of this.value) {
+    let i = count.findIndex(c => c.value == val.value);
+    count[i].count++;
   }
-  let mode = Math.max.apply(this, count);
-  let max = count.findIndex(n => n == mode) - 1;
-  return {value: CardValues[max], count: mode};
+  count.sort((a, b) => b.count-a.count)
+  return count;
 };
 
 PokerHand.prototype.isFourOfAKind = function(){
-  return {true: this.sameValueCount().count === 4, ...this.sameValueCount()};
+  return {true: this.maxSameValueCount().count === 4, ...this.maxSameValueCount()};
 };
 
 PokerHand.prototype.isThreeOfAKind = function(){
-  return {true: this.sameValueCount().count === 3, ...this.sameValueCount()};
+  return {true: this.maxSameValueCount().count === 3, ...this.maxSameValueCount()};
+};
+
+PokerHand.prototype.isFullHouse = function(){
+  return this.isThreeOfAKind().true && this.isPair().true;
+};
+
+PokerHand.prototype.isTwoPair = function(){
+  return {true: this.sameValueCount()[0].count === 2 && this.sameValueCount()[1].count === 2, ...this.maxSameValueCount()};
 };
 
 PokerHand.prototype.isPair = function(){
-  return {true: this.sameValueCount().count === 2, ...this.sameValueCount()};
+  return {true: this.maxSameValueCount().count >= 2, ...this.maxSameValueCount()};
 };
 
 PokerHand.prototype.isFlush = function(){
@@ -106,11 +117,20 @@ PokerHand.prototype.categorizeHand = function(){
   if (this.isFourOfAKind().true) {
     return ['Four of a kind', this.isFourOfAKind().value]
   }
+  if (this.isFullHouse()) {
+    return ['Full house', this.highCard()]
+  }
   if (this.isFlush()) {
     return ['Flush', this.highCard()]
   }
+  if (this.isStraight()) {
+    return ['Straight', this.highCard()]
+  }
   if (this.isThreeOfAKind().true) {
     return ['Three of a kind', this.isThreeOfAKind().value]
+  }
+  if (this.isTwoPair().true) {
+    return ['Two Pairs', this.isPair().value]
   }
   if (this.isPair().true) {
     return ['Pair', this.isPair().value]
@@ -128,63 +148,6 @@ PokerHand.prototype.compareWith = function(hand){
   if (comparison > 0) return Result.win;
   if (comparison < 0) return Result.loss
 }
-
-// import {Test, describe, it} from '../codewarsTestFramework'
-
-// describe("sameValueCount", function () {
-//   it('most common is a 2', () => Test.assertEquals(new PokerHand("2H 2H 2H 2H 6H").sameValueCount().value, "2"))
-//   it('most same value is 4', () => Test.assertEquals(new PokerHand("2H 2H 2H 2H 6H").sameValueCount().count, 4))
-//   it('1', () => Test.assertEquals(new PokerHand("2H 3H 4H 8H 6H").sameValueCount().count, 1))
-// })
-
-// describe("sequence", function () {
-//   it('is sequence', () => Test.assertEquals(new PokerHand("2H 3H 4H 5H 6H").isSequence(), true))
-//   it('is not sequence', () => Test.assertEquals(new PokerHand("2H 3H 4H 8H 6H").isSequence(), false))
-// })
-
-// describe("is royal flush", function () {
-//   it('yes', () => Test.assertEquals(new PokerHand("KS AS TS QS JS").isRoyalFlush(), true))
-//   it('no', () => Test.assertEquals(new PokerHand("2H 3H 4H 8H 6H").isRoyalFlush(), false))
-// })
-
-// describe("is straight flush", function () {
-//   it('yes', () => Test.assertEquals(new PokerHand("2H 3H 4H 5H 6H").isStraightFlush(), true))
-//   it('no', () => Test.assertEquals(new PokerHand("2H 3H 4H 8H 6H").isStraightFlush(), false))
-// })
-
-// describe("is four of a kind", function () {
-//   it('yes', () => Test.assertEquals(new PokerHand("AS AH 2H AD AC").isFourOfAKind().true, true))
-//   // it('no', () => Test.assertEquals(new PokerHand("2H 3H 4H 8H 6H").isFourOfAKind().true, false))
-// })
-
-// describe("has hand value", function () {
-//   it('["Straight flush","6"] ', () => Test.assertEquals(new PokerHand("2H 3H 4H 5H 6H").handValue[0], "Straight flush" ))
-// })
-
-// describe("If a poker hand is compared to another poker hand then:", function () {
-//     it("Highest straight flush wins", function() { assert(Result.loss, "2H 3H 4H 5H 6H", "KS AS TS QS JS");});
-//     it("Straight flush wins of 4 of a kind", function() { assert(Result.win, "2H 3H 4H 5H 6H", "AS AD AC AH JD");});
-//     it("Highest 4 of a kind wins", function() { assert(Result.win, "AS AH 2H AD AC", "JS JD JC JH 3D");});
-//     it("4 Of a kind wins of full house", function() { assert(Result.loss, "2S AH 2H AS AC", "JS JD JC JH AD");});
-//     it("Full house wins of flush", function() { assert(Result.win,  "2S AH 2H AS AC", "2H 3H 5H 6H 7H");});
-//     it("Highest flush wins", function() { assert(Result.win, "AS 3S 4S 8S 2S", "2H 3H 5H 6H 7H");});
-//     it("Flush wins of straight", function() { assert(Result.win, "2H 3H 5H 6H 7H", "2S 3H 4H 5S 6C");});
-//     it("Equal straight is tie", function() { assert(Result.tie, "2S 3H 4H 5S 6C", "3D 4C 5H 6H 2S");});
-//     it("Straight wins of three of a kind", function() { assert(Result.win, "2S 3H 4H 5S 6C", "AH AC 5H 6H AS");});
-//     it("3 Of a kind wins of two pair", function() { assert(Result.loss, "2S 2H 4H 5S 4C", "AH AC 5H 6H AS");});
-//     it("2 Pair wins of pair", function() { assert(Result.win, "2S 2H 4H 5S 4C", "AH AC 5H 6H 7S");});
-//     it("Highest pair wins", function() { assert(Result.loss, "6S AD 7H 4S AS", "AH AC 5H 6H 7S");});
-//     it("Pair wins of nothing", function() { assert(Result.loss, "2S AH 4H 5S KC", "AH AC 5H 6H 7S");});
-//     it("Highest card loses", function() { assert(Result.loss, "2S 3H 6H 7S 9C", "7H 3C TH 6H 9S");});
-//     it("Highest card wins", function() { assert(Result.win, "4S 5H 6H TS AC", "3S 5H 6H TS AC");});
-//     it("Equal cards is tie", function() { assert(Result.tie, "2S AH 4H 5S 6C", "AD 4C 5H 6H 2C");});
-// });
-
-// function assert(expected, player, opponent){
-//   var p = new PokerHand(player);
-//   var o = new PokerHand(opponent);
-//   Test.assertEquals(p.compareWith(o), expected);
-// }
 
 module.exports = {
   Result,

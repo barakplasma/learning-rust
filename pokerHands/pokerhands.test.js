@@ -1,9 +1,9 @@
 const {Result, PokerHand} = require('./pokerhands');
 
-describe("sameValueCount", function () {
-  it('most common is a 2', () => expect(new PokerHand("2H 2H 2H 2H 6H").sameValueCount().value).toBe( "2"))
-  it('most same value is 4', () => expect(new PokerHand("2H 2H 2H 2H 6H").sameValueCount().count).toBe( 4))
-  it('1', () => expect(new PokerHand("2H 3H 4H 8H 6H").sameValueCount().count).toBe( 1))
+describe("maxSameValueCount", function () {
+  it('most common is a 2', () => expect(new PokerHand("2H 2H 2H 2H 6H").maxSameValueCount().value).toBe( "2"))
+  it('most same value is 4', () => expect(new PokerHand("2H 2H 2H 2H 6H").maxSameValueCount().count).toBe( 4))
+  it('1', () => expect(new PokerHand("2H 3H 4H 8H 6H").maxSameValueCount().count).toBe( 1))
 })
 
 describe("sequence", function () {
@@ -21,9 +21,19 @@ describe("is straight flush", function () {
   it('no', () => expect(new PokerHand("2H 3H 4H 8H 6H").isStraightFlush()).toBe( false))
 })
 
+describe("is straight", function () {
+  it('yes', () => expect(new PokerHand("2H 3H 4H 5H 6H").isStraight()).toBe( true))
+  it('no', () => expect(new PokerHand("2H 3H 4H 8H 6H").isStraight()).toBe( false))
+})
+
 describe("is four of a kind", function () {
-  it('yes', () => expect(new PokerHand("AS AH 2H AD AC").isFourOfAKind().true).toBe( true))
-  // it('no', () => expect(new PokerHand("2H 3H 4H 8H 6H").isFourOfAKind().true).toBe( false))
+  it('yes is three', () => expect(new PokerHand("AS 5H 2H AD AC").isThreeOfAKind()).toEqual({"count": 3, "true": true, "value": "ACE"}))
+  it('no', () => expect(new PokerHand("2H 3H 4H 8H 6H").isFourOfAKind()).toEqual({"count": 1, "true": false, "value": "8"}))
+})
+
+describe("is three of a kind", function () {
+  it('yes is four', () => expect(new PokerHand("AS AH 2H AD AC").isFourOfAKind()).toEqual({"count": 4, "true": true, "value": "ACE"}))
+  it('no', () => expect(new PokerHand("2H 3H 4H 8H 6H").isFourOfAKind()).toEqual({"count": 1, "true": false, "value": "8"}))
 })
 
 describe("has hand value", function () {

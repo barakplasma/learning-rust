@@ -22,6 +22,8 @@ describe("is straight flush", function () {
 })
 
 describe("is straight", function () {
+  it('yes', () => expect(new PokerHand("2S 3H 4H 5S 6C").isStraight()).toBe( true))
+
   it('yes', () => expect(new PokerHand("2H 3H 4H 5H 6H").isStraight()).toBe( true))
   it('no', () => expect(new PokerHand("2H 3H 4H 8H 6H").isStraight()).toBe( false))
 })
@@ -32,12 +34,42 @@ describe("is four of a kind", function () {
 })
 
 describe("is three of a kind", function () {
-  it('yes is four', () => expect(new PokerHand("AS AH 2H AD AC").isFourOfAKind()).toEqual({"count": 4, "true": true, "value": "ACE"}))
-  it('no', () => expect(new PokerHand("2H 3H 4H 8H 6H").isFourOfAKind()).toEqual({"count": 1, "true": false, "value": "8"}))
+  it('yes is three', () => expect(new PokerHand("AH AC 5H 6H AS").isThreeOfAKind()).toEqual({"count": 3, "true": true, "value": "ACE"}))
+  it('no', () => expect(new PokerHand("2H 3H 4H 8H 6H").isThreeOfAKind()).toEqual({"count": 1, "true": false, "value": "8"}))
 })
 
 describe("has hand value", function () {
   it('["Straight flush","6"] ', () => expect(new PokerHand("2H 3H 4H 5H 6H").handValue[0]).toBe( "Straight flush" ))
+})
+
+describe('Compare With', () => {
+  it('should rank straight higher than 3 of a kind', () => {
+    expect(new PokerHand("AH AC 5H 6H AS").compareWith(new PokerHand("2H 3H 4H 5H 6H"))).toBe(Result.loss)
+  })
+  it('should rank 3 of a kind lower than straight', () => {
+    expect(new PokerHand("2H 3H 4H 5H 6H").compareWith(new PokerHand("AH AC 5H 6H AS"))).toBe(Result.win)
+  })
+  it('should rank straight flush > 4 of a kind', () => {
+    expect(new PokerHand("2H 3H 4H 5H 6H").compareWith(new PokerHand("AS AD AC AH JD"))).toBe(Result.win)
+  })
+  it('should rank straight flush < 4 of a kind', () => {
+    expect(new PokerHand("AS AD AC AH JD").compareWith(new PokerHand("2H 3H 4H 5H 6H"))).toBe(Result.loss)
+  })
+})
+
+describe('Rank Hand', () => {
+  it('should rank straight', () => {
+    expect(new PokerHand("2S 3H 4H 5S 6C").rankHand()).toBe(4.05)
+  })
+  it('should rank 3 of a kind', () => {
+    expect(new PokerHand("AH AC 5H 6H AS").rankHand()).toBe(6.13)
+  })
+  it('should rank straight flush', () => {
+    expect(new PokerHand("2H 3H 4H 5H 6H").rankHand()).toBe(8.05)
+  })
+  it('should rank 4 of a kind', () => {
+    expect(new PokerHand("AS AD AC AH JD").rankHand()).toBe(7.13)
+  })
 })
 
 describe("If a poker hand is compared to another poker hand then:", function () {

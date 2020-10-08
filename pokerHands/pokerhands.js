@@ -1,4 +1,4 @@
-var Result = { "win": 1, "loss": 2, "tie": 3 }
+var Result = { "win": "win", "loss": "loss", "tie": "tie" }
 
 function PokerHand(hand) {
   this.value = hand.split(' ').map(p=>({suit: suitName(p[1]), value: valueName(p[0])}));
@@ -138,12 +138,12 @@ PokerHand.prototype.categorizeHand = function(){
   return ['Highcard', this.highCard()]
 }
 
-PokerHand.prototype.rankHand = function(hand) {
-  return HandValues.findIndex(handName => handName == hand.handValue[0]) + (cardValue(hand.highCard()) / 100)
+PokerHand.prototype.rankHand = function() {
+  return HandValues.findIndex(handName => handName == this.handValue[0]) + (cardValue(this.highCard()) / 100)
 }
 
 PokerHand.prototype.compareWith = function(hand){
-  let comparison = this.rankHand(this) - this.rankHand(hand);
+  let comparison = this.rankHand() - hand.rankHand();
   if (comparison == 0) return Result.tie;
   if (comparison > 0) return Result.win;
   if (comparison < 0) return Result.loss

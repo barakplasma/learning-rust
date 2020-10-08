@@ -1,0 +1,9 @@
+[package]
+name = "simple-time-difference"
+version = "0.1.0"
+authors = ["Michael Salaverry <michael_salaverry@intuit.com>"]
+edition = "2018"
+# https://www.codewars.com/kumite/5f3e221f18330d001a031689/edit
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]

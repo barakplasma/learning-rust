@@ -144,7 +144,18 @@ PokerHand.prototype.rankHand = function() {
 
 PokerHand.prototype.compareWith = function(hand){
   let comparison = this.rankHand() - hand.rankHand();
-  if (comparison == 0) return Result.tie;
+  if (comparison == 0) {
+    // for (let i in this.value) {
+    //   let curIndex = 4-parseInt(i);
+    //   if (this.value[curIndex] !== hand.value[curIndex]) {
+    //     if (this.compareCards(this.value[curIndex], hand.value[curIndex]) > 0) {
+    //       return Result.win
+    //     }
+    //     return Result.loss
+    //   }
+    // }
+    return Result.tie
+  };
   if (comparison > 0) return Result.win;
   if (comparison < 0) return Result.loss
 }

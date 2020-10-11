@@ -44,7 +44,7 @@ PokerHand.prototype.highCard = function(){
   return highCard;
 }
 
-PokerHand.prototype.isSequence = function(){
+PokerHand.prototype.isStraight = function(){
   let previousCard;
   let anyOutOfSequence = false
   for (let card of this.value) {
@@ -57,15 +57,11 @@ PokerHand.prototype.isSequence = function(){
 };
 
 PokerHand.prototype.isRoyalFlush = function(){
-  return this.highCard() === 'ACE' && this.isSequence() && this.isFlush()
+  return this.highCard() === 'ACE' && this.isStraight() && this.isFlush()
 };
 
 PokerHand.prototype.isStraightFlush = function(){
-  return this.isSequence() && this.isFlush();
-};
-
-PokerHand.prototype.isStraight = function(){
-  return this.isSequence();
+  return this.isStraight() && this.isFlush();
 };
 
 PokerHand.prototype.maxSameValueCount = function(){

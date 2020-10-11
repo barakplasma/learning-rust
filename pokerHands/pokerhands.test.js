@@ -8,8 +8,8 @@ describe("maxSameValueCount", function () {
 })
 
 describe("sequence", function () {
-  it('is sequence', () => expect(new PokerHand("2H 3H 4H 5H 6H").isSequence()).toBe( true))
-  it('is not sequence', () => expect(new PokerHand("2H 3H 4H 8H 6H").isSequence()).toBe( false))
+  it('is sequence', () => expect(new PokerHand("2H 3H 4H 5H 6H").isStraight()).toBe( true))
+  it('is not sequence', () => expect(new PokerHand("2H 3H 4H 8H 6H").isStraight()).toBe( false))
 })
 
 describe("is royal flush", function () {

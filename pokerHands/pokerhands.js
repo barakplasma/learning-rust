@@ -90,7 +90,15 @@ PokerHand.prototype.isThreeOfAKind = function(){
 };
 
 PokerHand.prototype.isFullHouse = function(){
-  return this.isThreeOfAKind().true && this.isPair().true;
+  let threeOfAKind = this.isThreeOfAKind();
+  if (threeOfAKind.true) {
+    let remainingValues = this.value.filter(c => c.value !== threeOfAKind.value);
+    let remainingHand = new PokerHand('');
+    remainingHand.value = remainingValues;
+    let remainingHandIsPair = remainingHand.isPair();
+    return remainingHandIsPair.true;
+  }
+  return false;
 };
 
 PokerHand.prototype.isTwoPair = function(){
@@ -143,22 +151,27 @@ PokerHand.prototype.rankHand = function() {
 }
 
 PokerHand.prototype.compareWith = function(hand){
+  console.log(this.value, hand.value)
   let comparison = this.rankHand() - hand.rankHand();
   if (comparison == 0) {
-    // for (let i in this.value) {
-    //   let curIndex = 4-parseInt(i);
-    //   if (this.value[curIndex] !== hand.value[curIndex]) {
-    //     if (this.compareCards(this.value[curIndex], hand.value[curIndex]) > 0) {
-    //       return Result.win
-    //     }
-    //     return Result.loss
-    //   }
-    // }
+    for (let i in this.value) {
+      let curIndex = 4-parseInt(i);
+      if (this.value[curIndex] !== hand.value[curIndex]) {
+        const tiebreaker = this.compareCards(this.value[curIndex], hand.value[curIndex]);
+        if (tiebreaker > 0) {
+          return Result.win
+        } else if (tiebreaker < 0) {
+          return Result.loss
+        }
+        return Result.tie
+      }
+    }
     return Result.tie
   };
   if (comparison > 0) return Result.win;
   if (comparison < 0) return Result.loss
 }
+
 
 module.exports = {
   Result,

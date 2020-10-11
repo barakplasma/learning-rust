@@ -1,6 +1,7 @@
 var Result = { "win": "win", "loss": "loss", "tie": "tie" }
 
 function PokerHand(hand) {
+  this.originalHand = hand;
   this.value = hand.split(' ').map(p=>({suit: suitName(p[1]), value: valueName(p[0])}));
   this.sortHand();
   this.handValue = this.categorizeHand();
@@ -56,7 +57,7 @@ PokerHand.prototype.isSequence = function(){
 };
 
 PokerHand.prototype.isRoyalFlush = function(){
-  return this.highCard() === 'ACE' && this.isSequence()
+  return this.highCard() === 'ACE' && this.isSequence() && this.isFlush()
 };
 
 PokerHand.prototype.isStraightFlush = function(){
@@ -151,7 +152,6 @@ PokerHand.prototype.rankHand = function() {
 }
 
 PokerHand.prototype.compareWith = function(hand){
-  console.log(this.value, hand.value)
   let comparison = this.rankHand() - hand.rankHand();
   if (comparison == 0) {
     for (let i in this.value) {
@@ -163,7 +163,6 @@ PokerHand.prototype.compareWith = function(hand){
         } else if (tiebreaker < 0) {
           return Result.loss
         }
-        return Result.tie
       }
     }
     return Result.tie

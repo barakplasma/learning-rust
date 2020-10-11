@@ -1,3 +1,4 @@
+const { it } = require('@jest/globals');
 const {Result, PokerHand} = require('./pokerhands');
 
 describe("maxSameValueCount", function () {
@@ -62,7 +63,7 @@ describe('Rank Hand', () => {
     expect(new PokerHand("2S 3H 4H 5S 6C").rankHand()).toBe(4.05)
   })
   it('should rank 3 of a kind', () => {
-    expect(new PokerHand("AH AC 5H 6H AS").rankHand()).toBe(6.13)
+    expect(new PokerHand("AH AC 5H 6H AS").rankHand()).toBe(3.13)
   })
   it('should rank straight flush', () => {
     expect(new PokerHand("2H 3H 4H 5H 6H").rankHand()).toBe(8.05)
@@ -90,6 +91,17 @@ describe("If a poker hand is compared to another poker hand then:", function () 
     it("Highest card wins", function() { assert(Result.win, "4S 5H 6H TS AC", "3S 5H 6H TS AC");});
     it("Equal cards is tie", function() { assert(Result.tie, "2S AH 4H 5S 6C", "AD 4C 5H 6H 2C");});
 });
+
+describe('random tests', () => {
+  it("should win", () => {
+    assert(Result.win, "JC KH JS JD JH", "QC KH TS JS AH")
+  });
+  it('should lose', () => {
+    assert(Result.loss, "QC KH TS JS AH", "3S 8S 9S 5S KS")
+  })
+
+})
+
 
 function assert(expected, player, opponent){
   var p = new PokerHand(player);

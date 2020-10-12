@@ -1,4 +1,4 @@
-const { it } = require('@jest/globals');
+const { it, describe } = require('@jest/globals');
 const {Result, PokerHand} = require('./pokerhands');
 
 describe("maxSameValueCount", function () {

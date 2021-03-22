@@ -10,21 +10,21 @@ fn main() {
     let sari = Person::new("Sari", &mary, &herbert);
     let rob = Person::new("Rob", &mary, &herbert);
 
-    f.add_member(&rob);
-    f.add_member(&sari);
-    f.add_member(&herbert);
-    f.add_member(&mary);
-
     let michael = Person::new("Michael", &sari, &david);
     let lia = Person::new("Lia", &sari, &david);
 
-    s.add_member(&david);
-    s.add_member(&lia);
-    s.add_member(&michael);
+    for new_member in [&ed, &mimi, &david, &lia, &michael].iter() {
+        s.add_member(new_member);
+    }
+
+    for new_member in [&rob, &sari, &herbert, &mary, &lia, &michael].iter() {
+        f.add_member(new_member);
+    }
 
     // michael.display_all_parents();
     s.siblings(&michael);
     f.siblings(&sari);
+    s.siblings(&ed);
 }
 
 type Members<'people> = Vec<&'people Person<'people>>;

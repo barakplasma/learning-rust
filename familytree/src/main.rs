@@ -77,12 +77,12 @@ impl<'people> Person<'people> {
         }
     }
 
-    fn display_parents(&self, level: usize) {
+    fn display_person_at_level(&self, level: usize) {
         println!("{}{}", " ".repeat(level*3), &self.name);
     }
 
     fn display_parent_level(&self, level: usize) {
-        self.display_parents(level);
+        self.display_person_at_level(level);
         match self.dad {
             Some(d) => d.display_parent_level(level + 1),
             None => (),

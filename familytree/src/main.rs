@@ -1,3 +1,5 @@
+use std::{fmt::Display, fmt::Formatter, fmt::Result, ops::Deref};
+
 fn main() {
     let mut s = Family::new();
     let mut f = Family::new();
@@ -5,6 +7,10 @@ fn main() {
     let mimi = Person::root("Mimi");
     let ed = Person::root("Ed");
     let david = Person::new("David", &mimi, &ed);
+    let phillip = Person::new("Phillip", &mimi, &ed);
+    let isabella = Person::new("Isabella", &mimi, &ed);
+    let beatrice = Person::new("Beatrice", &mimi, &ed);
+    let mia = Person::new("Mia", &mimi, &ed);
     let mary = Person::root("Mary");
     let herbert = Person::root("Herbert");
     let sari = Person::new("Sari", &mary, &herbert);
@@ -13,7 +19,11 @@ fn main() {
     let michael = Person::new("Michael", &sari, &david);
     let lia = Person::new("Lia", &sari, &david);
 
-    for new_member in [&ed, &mimi, &david, &lia, &michael].iter() {
+    for new_member in [
+        &ed, &mimi, &david, &lia, &michael, &phillip, &isabella, &beatrice, &mia,
+    ]
+    .iter()
+    {
         s.add_member(new_member);
     }
 
@@ -21,10 +31,9 @@ fn main() {
         f.add_member(new_member);
     }
 
-    // michael.display_all_parents();
-    s.siblings(&michael);
-    f.siblings(&sari);
-    s.siblings(&ed);
+    michael.display_all_parents();
+    println!("Siblings of {}: {}", michael, s.siblings(&michael));
+    println!("Siblings of {}: {}", david, s.siblings(&david));
 }
 
 type Members<'people> = Vec<&'people Person<'people>>;
@@ -41,15 +50,37 @@ impl<'people> Family<'people> {
         self.members.push(member);
     }
 
-    fn siblings(&self, individual: &'people Person) {
-        println!("Siblings of {}: ", individual.name);
-        self.members.iter().filter(|m| {
-            match [m.dad, individual.dad] {
-                [Some(dad), Some(dad2)] => dad == dad2,
-                _ => false
-            }
-        }).for_each(|sibling| print!("{}, ", sibling.name));
-        println!("");
+    fn siblings(&self, individual: &'people Person) -> Family {
+        Family {
+            members: self
+                .members
+                .iter()
+                .filter(|m| {
+                    if individual.name != m.name {
+                        return match [m.dad, individual.dad] {
+                            [Some(dad), Some(dad2)] => dad == dad2,
+                            _ => false,
+                        };
+                    }
+                    return false;
+                })
+                .map(|x| x.deref())
+                .collect(),
+        }
+    }
+}
+
+impl Display for Family<'_> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(
+            f,
+            "{}",
+            self.members
+                .iter()
+                .map(|p| p.name.as_str())
+                .collect::<Vec<&str>>()
+                .join(", ")
+        )
     }
 }
 
@@ -78,7 +109,7 @@ impl<'people> Person<'people> {
     }
 
     fn display_person_at_level(&self, level: usize) {
-        println!("{}{}", " ".repeat(level*3), &self.name);
+        println!("{}{}", " ".repeat(level * 4), &self);
     }
 
     fn display_parent_level(&self, level: usize) {
@@ -95,5 +126,11 @@ impl<'people> Person<'people> {
 
     fn display_all_parents(&self) {
         self.display_parent_level(0);
+    }
+}
+
+impl Display for Person<'_> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "{}", self.name)
     }
 }
